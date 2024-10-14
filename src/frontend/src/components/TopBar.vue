@@ -43,31 +43,7 @@ export default {
   align-items: center;
 }
 
-.home-button {
-  background: none;
-  border: none;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-  margin-right: 20px;
-}
 
-.home-button:hover {
-  text-decoration: underline;
-}
-
-.icons {
-  position: relative;
-  padding: 5px 10px;
-  border-radius: 50px;
-  font-weight: bold;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  cursor: pointer;
-  margin-right: 20px; /* Add margin to create space */
-}
 
 
 button {
