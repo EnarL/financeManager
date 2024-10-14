@@ -1,6 +1,8 @@
 <script setup>
 import { ref } from "vue";
 import { useStore } from "vuex";
+import {useRouter} from 'vue-router';
+
 import ChangePassword from "@/components/ChangePassword.vue";
 import DeleteAccount from "@/components/DeleteAccount.vue";
 
@@ -8,6 +10,7 @@ import DeleteAccount from "@/components/DeleteAccount.vue";
 const showChangePasswordModel = ref(false);
 const showDeleteAccountModel = ref(false);
 const store = useStore();
+const router = useRouter();
 const changePassword = async (currentPassword, newPassword) => {
   try {
     await store.dispatch('user/changePassword', { currentPassword, newPassword });
@@ -18,8 +21,11 @@ const changePassword = async (currentPassword, newPassword) => {
 };
 const deleteAccount = async () => {
   try {
+
     await store.dispatch('user/deleteUser');
     showDeleteAccountModel.value = false;
+    await router.push('/');
+
   } catch (error) {
     console.error('Error deleting account:', error);
   }

@@ -23,7 +23,7 @@ export default {
     ...mapState({
       expenses: state => state.expenses.expenses,
       loading: state => state.expenses.loading,
-      error: state => state.expenses.error || state.incomes.error,
+      error: state => state.expenses.error,
       username: state => state.user.username,
       token: state => state.user.token
     })

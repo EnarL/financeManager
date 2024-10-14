@@ -31,6 +31,9 @@ public class UserService {
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
 
     public Users register(Users user) {
+        if (repository.findByUsername(user.getUsername()) != null) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Username already exists");
+        }
       user.setPassword(encoder.encode(user.getPassword()));
       user.setRole(Roles.USER);
       return repository.save(user);

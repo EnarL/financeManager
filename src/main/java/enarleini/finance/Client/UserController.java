@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-
 @CrossOrigin(origins = "http://localhost:8081")
 public class UserController {
     @Autowired

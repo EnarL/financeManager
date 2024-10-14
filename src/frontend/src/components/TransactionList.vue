@@ -27,7 +27,6 @@
 
 <script>
 import { mapActions } from 'vuex';
-import { useDark } from "@vueuse/core";
 
 export default {
   name: 'TransactionList',
@@ -36,10 +35,6 @@ export default {
     transactions: Array,
     deleteTransaction: Function,
     isExpense: Boolean
-  },
-  setup() {
-    const isDark = useDark();
-    return { isDark };
   },
   data() {
     return {
@@ -83,8 +78,8 @@ export default {
       } else {
         await this.updateIncome(this.selectedTransaction);
       }
-      this.selectedTransaction = null; // Clear the form
-      this.$emit('update'); // Emit an event to refresh the list
+      this.selectedTransaction = null;
+      this.$emit('update');
     }
   }
 }
@@ -98,10 +93,6 @@ export default {
   padding: 0;
   box-sizing: border-box;
 }
-
-
-
-
 .transaction-list input {
   width: 100%;
   padding: 10px;

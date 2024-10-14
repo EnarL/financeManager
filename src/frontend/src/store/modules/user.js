@@ -3,7 +3,6 @@ import axios from 'axios';
 const state = {
     username: localStorage.getItem('username'),
     token: localStorage.getItem('token'),
-    id: localStorage.getItem('id'),
     loading: false,
     errorMessage: ''
 };
@@ -30,17 +29,16 @@ const mutations = {
 const actions = {
     async register({ commit }, { username, email, password }) {
         commit('SET_LOADING', true);
-            try{
-                await axios.post('http://localhost:8080/register',
-                    {
-                        username,
-                        email,
-                        password
-                    });
-                console.log('User registered');
-            } catch (error) {
-                if (error.response && error.response.status === 401) {
-                commit('SET_ERROR_MESSAGE', 'Invalid registration details');
+        try {
+            await axios.post('http://localhost:8080/register', {
+                username,
+                email,
+                password
+            });
+            console.log('User registered');
+        } catch (error) {
+            if (error.response && error.response.status === 401) {
+                commit('SET_ERROR_MESSAGE', 'Username is already taken');
             } else {
                 commit('SET_ERROR_MESSAGE', 'An error occurred during registration');
             }
@@ -79,25 +77,15 @@ const actions = {
         localStorage.removeItem('id');
         commit('CLEAR_USER');
     },
-    async changePassword({ state }, { currentPassword, newPassword }) {
+    async deleteUser({ commit, state }) {
         try {
-            await axios.put(`http://localhost:8080/changepassword/${state.username}`, null, {
-                params: {
-                    currentPassword,
-                    newPassword
-                },
+            const response = await axios.get(`http://localhost:8080/username/${state.username}`, {
                 headers: {
                     'Authorization': `Bearer ${state.token}`
                 }
             });
-        } catch (error) {
-            console.error('Error changing password:', error);
-            throw error;
-        }
-    },
-    async deleteUser({commit, state }) {
-        try {
-            const response = await axios.delete(`http://localhost:8080/${state.id}`, {
+            const userId = response.data.userID;
+            await axios.delete(`http://localhost:8080/${userId}`, {
                 headers: {
                     'Authorization': `Bearer ${state.token}`
                 }
@@ -106,17 +94,13 @@ const actions = {
                 commit('CLEAR_USER');
                 localStorage.removeItem('username');
                 localStorage.removeItem('token');
-                localStorage.removeItem('id');
             }
         } catch (error) {
             console.error('Error deleting user:', error);
             throw error;
         }
     }
-
-
 };
-
 export default {
 
     namespaced: true,
