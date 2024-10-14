@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class IncomesDto {
+
     @JsonProperty("id")
     private Integer id;
 

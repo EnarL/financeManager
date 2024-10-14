@@ -63,6 +63,7 @@ input {
   border: 1px solid #ddd;
   border-radius: 4px;
   transition: border-color 0.3s ease;
+  color:black;
 }
 
 input:focus {
@@ -76,6 +77,7 @@ button {
   border: none;
   border-radius: 4px;
   padding: 10px 20px;
+  max-width:200px;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.3s ease;
 }

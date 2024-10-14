@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
+
 @CrossOrigin(origins = "http://localhost:8081")
 public class UserController {
     @Autowired
@@ -50,23 +51,13 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/username/{username}")
     public Users findByUsername(@PathVariable String username){
-//        String authenticatedUsername = authenticatedUserService.getAuthenticatedUsername();
-//        if (!authenticatedUsername.equals(username)) {
-//            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You can only access your own account.");
-//        }
         return service.findClientByUsername(username);
     }
-
-
 
     @PreAuthorize("hasRole('ADMIN') or #username == authentication.principal.username")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/changepassword/{username}")
     public void changePassword(@PathVariable String username, @RequestParam String currentPassword, @RequestParam String newPassword) {
-//        String authenticatedUsername = authenticatedUserService.getAuthenticatedUsername();
-//        if (!authenticatedUsername.equals(username)) {
-//            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You can only change your own password.");
-//        }
         service.changeClientPassword(username, currentPassword, newPassword);
     }
     @PreAuthorize("hasRole('ADMIN') or @userService.findClientById(#id).getUsername() == authentication.principal.username")

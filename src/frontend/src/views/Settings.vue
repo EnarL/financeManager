@@ -1,5 +1,4 @@
 <script setup>
-import { useDark, useToggle } from "@vueuse/core";
 import { ref } from "vue";
 import { useStore } from "vuex";
 import ChangePassword from "@/components/ChangePassword.vue";
@@ -8,10 +7,7 @@ import DeleteAccount from "@/components/DeleteAccount.vue";
 
 const showChangePasswordModel = ref(false);
 const showDeleteAccountModel = ref(false);
-const isDark = useDark();
-const toggleDark = useToggle(isDark);
 const store = useStore();
-
 const changePassword = async (currentPassword, newPassword) => {
   try {
     await store.dispatch('user/changePassword', { currentPassword, newPassword });
@@ -20,7 +16,6 @@ const changePassword = async (currentPassword, newPassword) => {
     console.error('Error changing password:', error);
   }
 };
-
 const deleteAccount = async () => {
   try {
     await store.dispatch('user/deleteUser');
@@ -29,35 +24,13 @@ const deleteAccount = async () => {
     console.error('Error deleting account:', error);
   }
 };
-
-
-
 </script>
-
 <template>
   <main class="main-container">
     <div class="settings-card">
       <div class="header">
         <h1 class="settings-title">Settings</h1>
       </div>
-
-      <div class="settings-item">
-        <label class="label-text">Theme</label>
-        <button @click="toggleDark()" class="btn toggle-btn">
-          {{ isDark ? "Switch to Dark Mode" : "Switch to Light Mode" }}
-        </button>
-      </div>
-
-      <div class="settings-item">
-        <label class="label-text">Notification Settings</label>
-        <button class="btn notification-btn">Configure Notifications</button>
-      </div>
-
-      <div class="settings-item">
-        <label class="label-text">Account Settings</label>
-        <button class="btn account-btn">Manage Account</button>
-      </div>
-
       <div class="settings-item">
         <label class="label-text">Change Password</label>
         <button @click="showChangePasswordModel = true" class="btn change-password-btn">
@@ -99,18 +72,17 @@ export default {
   padding-top: 2rem;
   display: flex;
   justify-content: center;
-  background-color: #2e3a46;
+  background-color: lightblue;
   min-height: 100vh;
 }
 
 .settings-card {
   max-width: 900px;
-  max-height: 600px; /* Restrict height */
+  max-height: 600px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   padding: 2rem;
   border-radius: 8px;
   background-color: #fff;
-  overflow-y: auto; /* Enable internal scrolling if content overflows */
 }
 
 .header {
@@ -145,17 +117,11 @@ export default {
   margin-left: 1rem;
   border: none;
   color: #fff;
+  background-color: #009394;
 }
 
-.toggle-btn {
-  background-color: #000;
-}
 .delete-btn {
   background-color: #e53e3e;
-}
-
-.change-password-btn, .account-btn, .notification-btn {
-  background-color: #000;
 }
 
 .btn:hover {
@@ -176,26 +142,26 @@ input {
   border-radius: 4px;
 }
 
+/* Dark mode styles */
 .dark .main-container {
-  background-color: #ffffff;
+  background-color: #1e1e1e;
 }
 
 .dark .settings-card {
-  background-color: #2e3a46;
-}
-
-.dark .settings-title, .dark .label-text {
+  background-color: #2e2e2e;
   color: #fff;
 }
 
-.dark .toggle-btn {
-  background-color: #fff;
-  color: #000;
+.dark .settings-title {
+  color: #fff;
 }
 
-.dark .notification-btn, .dark .account-btn, .dark .change-password-btn {
-  background-color: #fff;
-  color: #000;
+.dark .label-text {
+  color: #fff;
+}
+
+.dark .btn {
+  background-color: #444;
 }
 
 .dark .delete-btn {
@@ -208,6 +174,12 @@ input {
 
 .dark .btn:active {
   background-color: #006270;
+}
+
+.dark input {
+  background-color: #444;
+  border: 1px solid #555;
+  color: #fff;
 }
 </style>
 

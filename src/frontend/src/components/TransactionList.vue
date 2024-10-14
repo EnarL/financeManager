@@ -1,5 +1,5 @@
 <template>
-  <div class="transaction-list">
+  <div :class="['transaction-list', { dark: isDark }]">
     <h2>{{ title }}</h2>
     <input v-model="filterText" placeholder="Filter transactions" />
     <input type="date" v-model="startDate" placeholder="Start date" />
@@ -26,7 +26,8 @@
 </template>
 
 <script>
-import axios from "axios";
+import { mapActions } from 'vuex';
+import { useDark } from "@vueuse/core";
 
 export default {
   name: 'TransactionList',
@@ -35,6 +36,10 @@ export default {
     transactions: Array,
     deleteTransaction: Function,
     isExpense: Boolean
+  },
+  setup() {
+    const isDark = useDark();
+    return { isDark };
   },
   data() {
     return {
@@ -61,41 +66,41 @@ export default {
     }
   },
   methods: {
+    ...mapActions({
+      updateExpense: 'expenses/updateExpense',
+      updateIncome: 'incomes/updateIncome'
+    }),
     toggleEditTransaction(transaction) {
       if (this.selectedTransaction && this.selectedTransaction.id === transaction.id) {
         this.selectedTransaction = null;
       } else {
-        this.selectedTransaction = { ...transaction };
+        this.selectedTransaction = {...transaction};
       }
     },
     async updateTransaction() {
-      const endpoint = this.isExpense ? 'expenses' : 'incomes';
-      try {
-        await axios.put(`http://localhost:8080/${endpoint}/update/${this.selectedTransaction.id}`, this.selectedTransaction, {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          }
-        });
-        console.log("Transaction updated successfully!");
-        this.selectedTransaction = null; // Clear the form
-        this.$emit('update'); // Emit an event to refresh the list
-      } catch (error) {
-        console.error("There was an error updating the transaction!", error);
-        console.log(this.selectedTransaction);
+      if (this.isExpense) {
+        await this.updateExpense(this.selectedTransaction);
+      } else {
+        await this.updateIncome(this.selectedTransaction);
       }
+      this.selectedTransaction = null; // Clear the form
+      this.$emit('update'); // Emit an event to refresh the list
     }
   }
 }
 </script>
 
 <style scoped>
-.transaction-list {
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  padding: 15px;
-  width: 100%;
-  margin-bottom: 20px;
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
+
+
+
 
 .transaction-list input {
   width: 100%;
@@ -143,5 +148,30 @@ export default {
 
 .transaction-list button:hover {
   background-color: #cc0000;
+}
+
+/* Dark mode styles */
+.dark .transaction-list {
+  background-color: #2e3a46;
+  color: #fff;
+}
+
+.dark .transaction-list input {
+  background-color: #444;
+  border: 1px solid #555;
+  color: #fff;
+}
+
+.dark .transaction-list li {
+  border-bottom: 1px solid #555;
+}
+
+.dark .transaction-list button {
+  background-color: #444;
+  color: #fff;
+}
+
+.dark .transaction-list button:hover {
+  background-color: #009394;
 }
 </style>

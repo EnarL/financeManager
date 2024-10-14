@@ -165,19 +165,36 @@ export default {
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 20px;
   padding: 20px;
-
+  border-radius: 8px;
 }
 
 .chart-card {
-
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   padding: 15px;
-
   transition: transform 0.3s ease;
 }
 
 .chart-card:hover {
   transform: translateY(-5px);
 }
+
+.chart-card h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+/* Dark mode styles */
+.dark .chart-card {
+  box-shadow: 0 4px 6px rgba(255, 255, 255, 0.1);
+}
+
+.dark .chart-card h2 {
+  color: #fff;
+}
+
+
 </style>

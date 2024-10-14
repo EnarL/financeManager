@@ -1,5 +1,5 @@
 <template>
-  <div :class="['dashboard']">
+  <div :class="['dashboard', { dark: isDark }]">
     <LineChart :incomes="incomes" :expenses="expenses"></LineChart>
   </div>
 </template>
@@ -7,12 +7,17 @@
 <script>
 import { mapState, mapActions } from 'vuex';
 import LineChart from "@/components/LineChart.vue";
+import { useDark } from "@vueuse/core";
 
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: 'Dashboard',
   components: {
     LineChart
+  },
+  setup() {
+    const isDark = useDark();
+    return { isDark };
   },
   computed: {
     ...mapState({
@@ -100,5 +105,36 @@ button:active {
   transform: translateY(0);
 }
 
+/* Dark mode styles */
+.dark {
+  background-color: #2e3a46;
+  color: #fff;
+}
 
+.dark h1 {
+  color: #fff;
+}
+
+.dark input {
+  background-color: #444;
+  border-color: red;
+  color: #fff;
+}
+
+.dark input:focus {
+  border-color: #009394;
+}
+
+.dark button {
+  background-color: #444;
+  color: #fff;
+}
+
+.dark button:hover {
+  background-color: #009394;
+}
+
+.dark button:active {
+  background-color: #006270;
+}
 </style>

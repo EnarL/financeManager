@@ -1,6 +1,6 @@
 <template>
-  <div :class="['dashboard']">
-    <h1>Hi, {{ username }}</h1>
+  <div class = "dashboard">
+    <h1>Welcome, {{ username }}</h1>
     <div class="forms-container">
       <AddExpense @add-expense="addExpense"></AddExpense>
       <AddIncome @add-income="addIncome"></AddIncome>
@@ -10,8 +10,8 @@
     <div v-if="loading" class="loading">Loading...</div>
     <div v-if="error" class="error">{{ error }}</div>
   </div>
-</template>
 
+</template>
 <script>
 import { mapState, mapActions } from 'vuex';
 import AddExpense from '@/components/AddExpense.vue';
@@ -71,7 +71,7 @@ export default {
 .dashboard {
   background-color: lightblue;
   text-align: center;
-  margin-left:200px;
+  margin-left: 200px;
   font-family: 'Roboto', sans-serif;
   color: #333;
   padding: 20px;
@@ -79,17 +79,19 @@ export default {
 
 .forms-container {
   justify-content: center;
-  display:inline-flex;
+  display: inline-flex;
   gap: 20px;
   margin-bottom: 2rem;
 }
-.forms-container div{
+.forms-container div {
   width: 600px;
 }
 
 h1 {
   margin-bottom: 2rem;
   color: #006270;
+  font-weight: 700;
+  font-size: 30px;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
@@ -135,5 +137,45 @@ button:active {
   box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
 }
 
+/* Dark mode styles */
+.dark .dashboard {
+  background-color: #2e3a46;
+  color: #fff;
+}
 
+.dark .forms-container {
+  box-shadow: 0 4px 6px rgba(255, 255, 255, 0.1);
+}
+
+.dark h1 {
+  color: #fff;
+  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.1);
+}
+
+.dark input {
+  border: 1px solid #555;
+  background-color: #444;
+  color: #fff;
+}
+
+.dark input:focus {
+  border-color: #009394;
+}
+
+.dark button {
+  background-color: #444;
+  color: #fff;
+}
+
+.dark button:hover {
+  background-color: #009394;
+}
+
+.dark button:active {
+  background-color: #006270;
+}
+
+.dark .forms-container > *:hover {
+  box-shadow: 0 6px 8px rgba(255, 255, 255, 0.15);
+}
 </style>

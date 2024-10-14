@@ -72,6 +72,18 @@ const actions = {
         } catch (error) {
             console.error('Error deleting income:', error);
         }
+    }, async updateIncome({ rootState }, income) {
+        try {
+            const token = rootState.user.token;
+            await axios.put(`http://localhost:8080/incomes/update/${income.id}`, income, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+        } catch (error) {
+            console.error('Error updating income:', error);
+        }
     }
 };
 

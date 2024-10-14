@@ -228,5 +228,17 @@ export default {
 
 .chart-card:hover {
   transform: translateY(-5px);
+}/* Dark mode styles */
+.dark .charts-container {
+  background-color: #1e1e1e;
+}
+
+.dark .chart-card {
+  background-color: #2e2e2e;
+  color: #fff;
+}
+
+.dark canvas {
+  background-color: #2e2e2e;
 }
 </style>

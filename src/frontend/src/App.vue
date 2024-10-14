@@ -1,9 +1,9 @@
-// src/App.vue
 <template>
   <div id="app">
     <TopBar v-if="showTopBar"></TopBar>
     <SideBar v-if ="showSideBar"></SideBar>
     <router-view />
+
   </div>
 </template>
 

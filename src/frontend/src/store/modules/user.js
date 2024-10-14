@@ -112,72 +112,9 @@ const actions = {
             console.error('Error deleting user:', error);
             throw error;
         }
-    },
-
-    async assignRole({ state }, { username, role }) {
-        try {
-            await axios.post(`http://localhost:8080/${username}/role`, null, {
-                params: { role },
-                headers: {
-                    'Authorization': `Bearer ${state.token}`
-                }
-            });
-        } catch (error) {
-            console.error('Error assigning role:', error);
-            throw error;
-        }
-    },
-    async findAllUsers({ state }) {
-        try {
-            const response = await axios.get('http://localhost:8080/findall', {
-                headers: {
-                    'Authorization': `Bearer ${state.token}`
-                }
-            });
-            return response.data;
-        } catch (error) {
-            console.error('Error fetching all users:', error);
-            throw error;
-        }
-    },
-    async findUserById({ state }, id) {
-        try {
-            const response = await axios.get(`http://localhost:8080/id/${id}`, {
-                headers: {
-                    'Authorization': `Bearer ${state.token}`
-                }
-            });
-            return response.data;
-        } catch (error) {
-            console.error('Error fetching user by ID:', error);
-            throw error;
-        }
-    },
-    async findUserByUsername({ state }, username) {
-        try {
-            const response = await axios.get(`http://localhost:8080/username/${username}`, {
-                headers: {
-                    'Authorization': `Bearer ${state.token}`
-                }
-            });
-            return response.data;
-        } catch (error) {
-            console.error('Error fetching user by username:', error);
-            throw error;
-        }
-    },
-    async updateUser({ state }, { id, user }) {
-        try {
-            await axios.put(`http://localhost:8080/${id}`, user, {
-                headers: {
-                    'Authorization': `Bearer ${state.token}`
-                }
-            });
-        } catch (error) {
-            console.error('Error updating user:', error);
-            throw error;
-        }
     }
+
+
 };
 
 export default {

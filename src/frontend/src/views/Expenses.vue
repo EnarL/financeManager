@@ -1,18 +1,23 @@
 <template>
-  <div :class="['dashboard']">
+  <div :class="['dashboard', { dark: isDark }]">
     <TransactionList title="Expenses" :transactions="expenses" :isExpense="true" :delete-transaction="deleteExpense" @update="fetchExpenses"></TransactionList>
   </div>
 </template>
+
 <script>
 import { mapState, mapActions } from 'vuex';
-
 import TransactionList from "@/components/TransactionList.vue";
+import { useDark } from "@vueuse/core";
+
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: 'Dashboard',
   components: {
     TransactionList,
-
+  },
+  setup() {
+    const isDark = useDark();
+    return { isDark };
   },
   computed: {
     ...mapState({
@@ -31,7 +36,6 @@ export default {
       fetchExpenses: 'expenses/fetchExpenses',
       addExpense: 'expenses/addExpense',
       deleteExpense: 'expenses/deleteExpense',
-
     }),
     async fetchData() {
       try {
@@ -98,6 +102,37 @@ button:active {
   transform: translateY(0);
 }
 
+/* Dark mode styles */
+.dark .dashboard {
+  background-color: #2e3a46;
+  color: #fff;
+}
 
+.dark h1 {
+  color: #fff;
+  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.1);
+}
 
+.dark input {
+  border: 1px solid #555;
+  background-color: #444;
+  color: #fff;
+}
+
+.dark input:focus {
+  border-color: #009394;
+}
+
+.dark button {
+  background-color: #444;
+  color: red;
+}
+
+.dark button:hover {
+  background-color: #009394;
+}
+
+.dark button:active {
+  background-color: #006270;
+}
 </style>

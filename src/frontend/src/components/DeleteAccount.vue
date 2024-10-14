@@ -139,4 +139,47 @@ input {
 .secondary-button:hover {
   background-color: #5a6268;
 }
+
+/* Dark mode styles */
+.dark .modal {
+  background: #2e3a46;
+  color: #fff;
+  box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
+}
+
+.dark .modal-overlay {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.dark h2 {
+  color: #fff;
+}
+
+.dark label {
+  color: #bbb;
+}
+
+.dark input {
+  background: #444;
+  border: 1px solid #555;
+  color: #fff;
+}
+
+.dark .primary-button {
+  background-color: #444;
+  color: #fff;
+}
+
+.dark .primary-button:hover {
+  background-color: #009394;
+}
+
+.dark .secondary-button {
+  background-color: #555;
+  color: #fff;
+}
+
+.dark .secondary-button:hover {
+  background-color: #777;
+}
 </style>
