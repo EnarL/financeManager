@@ -20,7 +20,6 @@ public class Expenses{
     @JsonProperty("id")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     Integer id;
     @JsonProperty("username")
     @Column(name="username", nullable = false)

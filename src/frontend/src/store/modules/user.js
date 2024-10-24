@@ -30,7 +30,7 @@ const actions = {
     async register({ commit }, { username, email, password }) {
         commit('SET_LOADING', true);
         try {
-            await axios.post('http://localhost:8080/register', {
+            await axios.post('http://localhost:8080/api/usersregister', {
                 username,
                 email,
                 password
@@ -50,7 +50,7 @@ const actions = {
     async login({ commit }, { username, password }) {
         commit('SET_LOADING', true); // Start loading
         try {
-            const response = await axios.post('http://localhost:8080/login', {
+            const response = await axios.post('http://localhost:8080/api/users/login', {
                 username,
                 password,
             });
@@ -79,7 +79,7 @@ const actions = {
     },
     async deleteUser({ commit, state }) {
         try {
-            const response = await axios.get(`http://localhost:8080/username/${state.username}`, {
+            const response = await axios.get(`http://localhost:8080/api/users/username/${state.username}`, {
                 headers: {
                     'Authorization': `Bearer ${state.token}`
                 }

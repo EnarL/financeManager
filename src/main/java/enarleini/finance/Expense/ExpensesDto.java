@@ -18,19 +18,14 @@ public class ExpensesDto {
 
     @JsonProperty("id")
     private Integer id;
-
     @JsonProperty("username")
     private String username;
-
     @JsonProperty("amount")
     private BigDecimal amount;
-
     @JsonProperty("category")
     private String category;
-
     @JsonProperty("description")
     private String description;
-
     @JsonProperty("date")
     private String date;
 }

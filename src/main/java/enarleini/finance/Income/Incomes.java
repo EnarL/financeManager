@@ -35,6 +35,10 @@ public class Incomes{
     @Column(name="source", nullable = false)
     @NotEmpty(message = "Source is required")
     String source;
+    @JsonProperty("description")
+    @Column(name="description", nullable = false)
+    @NotEmpty(message = "Description is required")
+    String description;
     @JsonProperty("date")
     @Column(name="date", nullable = false)
     LocalDate date;

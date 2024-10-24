@@ -29,7 +29,6 @@ export default {
   watch: {
     expenses: 'updateMonthlyExpensesChart',
     incomes: 'updateMonthlyIncomesChart'
-
   },
   methods: {
     updateMonthlyExpensesChart() {

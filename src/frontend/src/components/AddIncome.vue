@@ -4,6 +4,7 @@
     <form @submit.prevent="addIncome">
       <input type="number" v-model="newIncome.amount" placeholder="Amount" required>
       <input type="text" v-model="newIncome.source" placeholder="Source" required>
+      <input type="text" v-model="newIncome.description" placeholder="Description" required>
       <input type="date" v-model="newIncome.date" placeholder="Date" required>
       <button type="submit">Add Income</button>
     </form>
@@ -18,6 +19,7 @@ export default {
       newIncome: {
         amount: null,
         source: '',
+        description: '',
         date: new Date().toISOString().split('T')[0]
       }
     };
@@ -31,6 +33,7 @@ export default {
       this.newIncome = {
         amount: null,
         source: '',
+        description: '',
         date: new Date().toISOString().split('T')[0],
 
       };

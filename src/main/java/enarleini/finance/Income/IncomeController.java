@@ -5,17 +5,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.math.BigDecimal;
-
-import java.time.YearMonth;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:8081")
-@RequestMapping("/incomes")
+@RequestMapping("/api/incomes")
 
 public class IncomeController {
 
@@ -29,12 +25,8 @@ public class IncomeController {
     }
     @PreAuthorize("hasRole('ADMIN') or @userService.findClientById(#id).getUsername() == authentication.principal.username")
     @GetMapping("/{id}")
-    Incomes findById(@PathVariable Long id) {
-        Optional<Incomes> user = service.findById(id);
-        if (user.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found.");
-        }
-        return user.get();
+    Optional<Incomes> findById(@PathVariable Long id) {
+        return service.findById(id);
     }
     @PreAuthorize("hasRole('ADMIN') or @userService.findClientById(#id).getUsername() == authentication.principal.username")
     @PutMapping("/update/{id}")
@@ -42,19 +34,16 @@ public class IncomeController {
     public Incomes updateIncome(@PathVariable Long id, @Valid @RequestBody IncomesDto updatedIncomesDto) {
         return service.updateIncome(id, updatedIncomesDto);
     }
+    @PreAuthorize("hasRole('ADMIN') or @userService.findClientById(#id).getUsername() == authentication.principal.username")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/add")
-    void create(@Valid @RequestBody Incomes user) {
-        service.create(user);
+    void create(@Valid @RequestBody Incomes income) {
+        service.create(income);
     }
+    @PreAuthorize("hasRole('ADMIN') or @userService.findClientById(#id).getUsername() == authentication.principal.username")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/delete/{id}")
     void delete(@PathVariable Long id) {
         service.delete(id);
-    }
-    @PreAuthorize("hasRole('ADMIN') or #username == authentication.principal.username")
-    @GetMapping("/sum")
-    public BigDecimal sumIncomesByMonth(@RequestParam String username, @RequestParam String month){
-        return service.sumIncomesByMonth(username, YearMonth.parse(month));
     }
 }

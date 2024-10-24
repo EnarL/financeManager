@@ -1,8 +1,9 @@
 package enarleini.finance.expenses;
 
-import enarleini.finance.Expense.ExpenseRepository;
-import enarleini.finance.Expense.ExpenseService;
-import enarleini.finance.Expense.Expenses;
+import enarleini.finance.Expense.*;
+
+import enarleini.finance.Expense.exception.ExpenseNotFoundException;
+import enarleini.finance.Expense.exception.InvalidExpenseException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -11,7 +12,6 @@ import org.mockito.MockitoAnnotations;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.YearMonth;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -34,14 +34,11 @@ class ExpenseServiceTest {
     }
 
     @Test
-    void testDelete() {
-        doNothing().when(expenseRepository).deleteById(anyLong());
+    void testDeleteExpenseNotFound() {
+        doThrow(new ExpenseNotFoundException("Expense not found with id 1")).when(expenseRepository).deleteById(1L);
 
-        expenseService.delete(1L);
-
-        verify(expenseRepository, times(1)).deleteById(1L);
+        assertThrows(ExpenseNotFoundException.class, () -> expenseService.delete(1L));
     }
-
 
     @Test
     void testFindAllByUsername() {
@@ -66,15 +63,13 @@ class ExpenseServiceTest {
     }
 
     @Test
-    void testFindByUsernameAndCategory() {
-        List<Expenses> expenses = Arrays.asList(new Expenses(), new Expenses());
-        when(expenseRepository.findByUsernameAndCategory(anyString(), anyString())).thenReturn(expenses);
+    void testFindByIdExpenseNotFound() {
+        when(expenseRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        List<Expenses> result = expenseService.findByUsernameAndCategory("testuser", "Food");
-
-        assertEquals(2, result.size());
-        verify(expenseRepository, times(1)).findByUsernameAndCategory("testuser", "Food");
+        assertThrows(ExpenseNotFoundException.class, () -> expenseService.findById(1L));
     }
+
+
 
     @Test
     void testCreate() {
@@ -86,33 +81,48 @@ class ExpenseServiceTest {
         verify(expenseRepository, times(1)).save(expense);
     }
 
+
     @Test
-    void testSumExpensesByMonth() {
-        Expenses expense1 = new Expenses();
-        expense1.setAmount(BigDecimal.valueOf(100));
-        expense1.setDate(LocalDate.of(2023, 10, 1));
+    void testUpdateExpense() {
+        Expenses existingExpense = new Expenses();
+        existingExpense.setId(1);
+        existingExpense.setAmount(BigDecimal.valueOf(100));
+        existingExpense.setCategory("Food");
+        existingExpense.setDescription("Groceries");
+        existingExpense.setDate(LocalDate.now());
 
-        Expenses expense2 = new Expenses();
-        expense2.setAmount(BigDecimal.valueOf(200));
-        expense2.setDate(LocalDate.of(2023, 10, 15));
+        ExpensesDto updatedExpenseDto = new ExpensesDto();
+        updatedExpenseDto.setAmount(BigDecimal.valueOf(200));
+        updatedExpenseDto.setCategory("Entertainment");
+        updatedExpenseDto.setDescription("Movies");
+        updatedExpenseDto.setDate(LocalDate.now().toString());
 
-        List<Expenses> expenses = Arrays.asList(expense1, expense2);
-        when(expenseRepository.findAllByUsername(anyString())).thenReturn(expenses);
+        when(expenseRepository.findById(anyLong())).thenReturn(Optional.of(existingExpense));
+        when(expenseRepository.save(any(Expenses.class))).thenReturn(existingExpense);
 
-        BigDecimal result = expenseService.sumExpensesByMonth("testuser", YearMonth.of(2023, 10));
+        Expenses updatedExpense = expenseService.updateExpense(1L, updatedExpenseDto);
 
-        assertEquals(BigDecimal.valueOf(300), result);
-        verify(expenseRepository, times(1)).findAllByUsername("testuser");
+        assertEquals(updatedExpenseDto.getAmount(), updatedExpense.getAmount());
+        assertEquals(updatedExpenseDto.getCategory(), updatedExpense.getCategory());
+        assertEquals(updatedExpenseDto.getDescription(), updatedExpense.getDescription());
+        assertEquals(LocalDate.parse(updatedExpenseDto.getDate()), updatedExpense.getDate());
+        verify(expenseRepository, times(1)).findById(1L);
+        verify(expenseRepository, times(1)).save(existingExpense);
     }
 
     @Test
-    void testFindByUsernameAndDateBetween() {
-        List<Expenses> expenses = Arrays.asList(new Expenses(), new Expenses());
-        when(expenseRepository.findByUsernameAndDateBetween(anyString(), any(LocalDate.class), any(LocalDate.class))).thenReturn(expenses);
+    void testUpdateExpenseNotFound() {
+        ExpensesDto updatedExpenseDto = new ExpensesDto();
+        updatedExpenseDto.setAmount(BigDecimal.valueOf(200));
+        updatedExpenseDto.setCategory("Entertainment");
+        updatedExpenseDto.setDescription("Movies");
+        updatedExpenseDto.setDate(LocalDate.now().toString());
 
-        List<Expenses> result = expenseService.findByUsernameAndDateBetween("testuser", LocalDate.of(2023, 10, 1), LocalDate.of(2023, 10, 31));
+        when(expenseRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        assertEquals(2, result.size());
-        verify(expenseRepository, times(1)).findByUsernameAndDateBetween("testuser", LocalDate.of(2023, 10, 1), LocalDate.of(2023, 10, 31));
+        assertThrows(ExpenseNotFoundException.class, () -> expenseService.updateExpense(1L, updatedExpenseDto));
     }
+
+
+
 }

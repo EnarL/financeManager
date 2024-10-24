@@ -18,16 +18,14 @@ public class IncomesDto {
 
     @JsonProperty("id")
     private Integer id;
-
     @JsonProperty("username")
     private String username;
-
     @JsonProperty("amount")
     private BigDecimal amount;
-
     @JsonProperty("source")
     private String source;
-
+    @JsonProperty("description")
+    private String description;
     @JsonProperty("date")
     private String date;
 }

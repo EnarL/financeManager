@@ -1,30 +1,29 @@
 <template>
-  <div class="login-container">
-    <h2>Login</h2>
-    <form @submit.prevent="handleLogin">
-      <div class="form-group">
-        <label for="username">Username:</label>
-        <input type="text" v-model="username" id="username" required />
-      </div>
-      <div class="form-group">
-        <label for="password">Password:</label>
-        <div class="password-input">
-          <input :type="passwordFieldType" v-model="password" id="password" required />
-          <span @click="togglePasswordVisibility" class="toggle-password">
-            {{ passwordFieldType === 'password' ? 'Show' : 'Hide' }}
-          </span>
+  <div class="form-container">
+    <div class="form-card">
+      <h2>Login</h2>
+      <form @submit.prevent="handleLogin">
+        <div class="form-group">
+          <label for="username">Username:</label>
+          <input type="text" v-model="username" id="username" required />
         </div>
-      </div>
-      <button type="submit" :disabled="loading">
-        <span v-if="loading" class="spinner"></span>
-        <span v-else>Login</span>
-      </button>
-    </form>
-
-    <!-- Error message -->
-    <p v-if="errorMessage">{{ errorMessage }}</p>
-
-    <button class="register-button" @click="goToRegister">Register</button>
+        <div class="form-group">
+          <label for="password">Password:</label>
+          <div class="password-input">
+            <input :type="passwordFieldType" v-model="password" id="password" required />
+            <span @click="togglePasswordVisibility" class="toggle-password">
+              {{ passwordFieldType === 'password' ? 'Show' : 'Hide' }}
+            </span>
+          </div>
+        </div>
+        <button type="submit" :disabled="loading">
+          <span v-if="loading" class="spinner"></span>
+          <span v-else>Login</span>
+        </button>
+      </form>
+      <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
+      <button class="secondary-button" @click="goToRegister">Register</button>
+    </div>
   </div>
 </template>
 
@@ -42,23 +41,20 @@ export default {
     };
   },
   computed: {
-    // Map Vuex state to local computed properties
     ...mapState('user', {
       loading: state => state.loading,
       errorMessage: state => state.errorMessage,
     }),
   },
   methods: {
-    // Map Vuex actions to component methods
     ...mapActions('user', ['login']),
 
     async handleLogin() {
       try {
         await this.login({username: this.username, password: this.password});
-
         await this.$router.push('/dashboard');
       } catch (error) {
-        console.error('Login failed:', error);  // Error is already handled in Vuex
+        console.error('Login failed:', error);
       }
     },
 
@@ -74,28 +70,36 @@ export default {
 </script>
 
 <style scoped>
-.login-container {
-  min-width: 400px;
-  margin: 0 auto;
+.form-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f0f2f5;
+}
+
+.form-card {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   padding: 30px;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-  background-color: #f9f9f9;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.form-card:hover {
+  transform: translateY(-5px);
 }
 
 h2 {
-  text-align: center;
   margin-bottom: 20px;
   color: #333;
 }
 
 .form-group {
-  margin-bottom: 15px;
+  margin-bottom: 1rem;
 }
 
 label {
@@ -105,11 +109,12 @@ label {
 }
 
 input {
+  display: block;
   width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  box-sizing: border-box;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 1rem;
 }
 
 .password-input {
@@ -122,18 +127,18 @@ input {
   top: 50%;
   transform: translateY(-50%);
   cursor: pointer;
-  color: #007BFF;
+  color: #007bff;
 }
 
 button {
-  width: 100%;
-  padding: 10px;
-  background-color: #007BFF;
-  color: white;
+  padding: 0.75rem 1.5rem;
   border: none;
-  border-radius: 5px;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: white;
   cursor: pointer;
-  font-size: 16px;
+  width: 100%;
+  margin-bottom: 1rem;
 }
 
 button:disabled {
@@ -145,9 +150,17 @@ button:hover:not(:disabled) {
   background-color: #0056b3;
 }
 
+.secondary-button {
+  background-color: #6c757d;
+}
+
+.secondary-button:hover {
+  background-color: #5a6268;
+}
+
 .spinner {
   border: 2px solid #f3f3f3;
-  border-top: 2px solid #007BFF;
+  border-top: 2px solid #007bff;
   border-radius: 50%;
   width: 14px;
   height: 14px;
@@ -155,22 +168,16 @@ button:hover:not(:disabled) {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
-p {
-  color: red;
-  text-align: center;
-  margin-top: 10px;
-}
-
-.register-button {
-  margin-top: 10px;
-  background-color: #28a745;
-}
-
-.register-button:hover {
-  background-color: #218838;
+.error-message {
+  color: #dc3545;
+  margin-bottom: 1rem;
 }
 </style>

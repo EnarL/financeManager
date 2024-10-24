@@ -9,6 +9,7 @@ import { mapState, mapActions } from 'vuex';
 import TransactionList from "@/components/TransactionList.vue";
 import { useDark } from "@vueuse/core";
 
+
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: 'Dashboard',
@@ -35,7 +36,7 @@ export default {
     ...mapActions({
       fetchIncomes: 'incomes/fetchIncomes',
       addIncome: 'incomes/addIncome',
-      deleteIncomes: 'incomes/deleteIncome',
+      deleteIncome: 'incomes/deleteIncome',
     }),
     async fetchData() {
       try {

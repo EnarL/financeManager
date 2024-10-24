@@ -29,7 +29,7 @@ const actions = {
         commit('SET_LOADING', true);
         try {
             const token = rootState.user.token; // Ensure token is retrieved correctly
-            const response = await axios.get(`http://localhost:8080/incomes/findall?username=${rootState.user.username}`, {
+            const response = await axios.get(`http://localhost:8080/api/incomes/findall?username=${rootState.user.username}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -46,7 +46,7 @@ const actions = {
         const incomeWithUser = { ...newIncome, username: rootState.user.username };
         try {
             const token = rootState.user.token; // Ensure token is retrieved correctly
-            await axios.post('http://localhost:8080/incomes/add', incomeWithUser, {
+            await axios.post('http://localhost:8080/api/incomes/add', incomeWithUser, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
@@ -60,7 +60,7 @@ const actions = {
     async deleteIncome({ commit, rootState }, incomeId) {
         try {
             const token = rootState.user.token; // Ensure token is retrieved correctly
-            const response = await axios.delete(`http://localhost:8080/incomes/delete/${incomeId}`, {
+            const response = await axios.delete(`http://localhost:8080/api/incomes/delete/${incomeId}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -75,7 +75,7 @@ const actions = {
     }, async updateIncome({ rootState }, income) {
         try {
             const token = rootState.user.token;
-            await axios.put(`http://localhost:8080/incomes/update/${income.id}`, income, {
+            await axios.put(`http://localhost:8080/api/incomes/update/${income.id}`, income, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'

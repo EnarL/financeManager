@@ -1,14 +1,13 @@
 package enarleini.finance.Expense;
 
+import enarleini.finance.Expense.exception.ExpenseNotFoundException;
+import enarleini.finance.Expense.exception.InvalidExpenseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
-import java.time.YearMonth;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Optional;
-import java.math.BigDecimal;
 
 @Service
 public class ExpenseService {
@@ -17,6 +16,9 @@ public class ExpenseService {
     private ExpenseRepository expenseRepository;
 
     public void delete(Long id) {
+        if (!expenseRepository.existsById(id)) {
+            throw new ExpenseNotFoundException("Expense not found with id " + id);
+        }
         expenseRepository.deleteById(id);
     }
 
@@ -25,22 +27,14 @@ public class ExpenseService {
     }
 
     public Optional<Expenses> findById(Long id) {
-        return expenseRepository.findById(id);
-    }
-    public List<Expenses> findByUsernameAndCategory(String username, String category) {
-        return expenseRepository.findByUsernameAndCategory(username, category);
+        return Optional.ofNullable(expenseRepository.findById(id)
+                .orElseThrow(() -> new ExpenseNotFoundException("Expense not found with id " + id)));
     }
 
-    public void create(Expenses user) {
-        expenseRepository.save(user);
+    public void create(Expenses expense) {
+        expenseRepository.save(expense);
     }
-    public BigDecimal sumExpensesByMonth(String username, YearMonth month) {
-        List<Expenses> expenses = expenseRepository.findAllByUsername(username);
-        return expenses.stream()
-                .filter(expense -> YearMonth.from(expense.getDate()).equals(month))
-                .map(Expenses::getAmount)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
+
     public Expenses updateExpense(Long id, ExpensesDto updatedExpenseDto) {
         return expenseRepository.findById(id).map(expense -> {
             if (updatedExpenseDto.getAmount() != null) {
@@ -56,13 +50,10 @@ public class ExpenseService {
                 try {
                     expense.setDate(LocalDate.parse(updatedExpenseDto.getDate()));
                 } catch (DateTimeParseException e) {
-                    throw new RuntimeException("Invalid date format: " + updatedExpenseDto.getDate());
+                    throw new InvalidExpenseException("Invalid date format: " + updatedExpenseDto.getDate());
                 }
             }
             return expenseRepository.save(expense);
-        }).orElseThrow(() -> new RuntimeException("Expense not found with id " + id));
-    }
-    public List<Expenses> findByUsernameAndDateBetween(String username, LocalDate startDate, LocalDate endDate) {
-        return expenseRepository.findByUsernameAndDateBetween(username, startDate, endDate);
+        }).orElseThrow(() -> new ExpenseNotFoundException("Expense not found with id " + id));
     }
 }

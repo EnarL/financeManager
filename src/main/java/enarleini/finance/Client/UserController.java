@@ -1,6 +1,5 @@
 package enarleini.finance.Client;
 
-import enarleini.finance.config.AuthenticatedUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -10,19 +9,15 @@ import java.util.Map;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:8081")
+@RequestMapping("/api/users")
 public class UserController {
     @Autowired
     private UserService service;
 
-    @Autowired
-    AuthenticatedUserService authenticatedUserService;
-
-    //dont need PreAuthorize for register
     @PostMapping("/register")
     public Users register(@RequestBody Users user){
         return service.register(user);
     }
-    //dont need PreAuthorize for login
     @PostMapping("/login")
     public Map<String, String> login(@RequestBody Users user)   {
         return service.verify(user);

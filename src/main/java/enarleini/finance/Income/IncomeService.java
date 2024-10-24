@@ -1,12 +1,12 @@
+// IncomeService.java
 package enarleini.finance.Income;
 
-
+import enarleini.finance.Income.exception.IncomeNotFoundException;
+import enarleini.finance.Income.exception.InvalidIncomeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.YearMonth;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +18,9 @@ public class IncomeService {
     private IncomeRepository incomeRepository;
 
     public void delete(Long id) {
+        if (!incomeRepository.existsById(id)) {
+            throw new IncomeNotFoundException("Income not found with id " + id);
+        }
         incomeRepository.deleteById(id);
     }
 
@@ -26,36 +29,33 @@ public class IncomeService {
     }
 
     public Optional<Incomes> findById(Long id) {
-        return incomeRepository.findById(id);
+        return Optional.ofNullable(incomeRepository.findById(id)
+                .orElseThrow(() -> new IncomeNotFoundException("Income not found with id " + id)));
     }
-    public Incomes updateIncome (Long id, IncomesDto updatedIncomeDto) {
-        return incomeRepository.findById(id).map(expense -> {
+
+    public Incomes updateIncome(Long id, IncomesDto updatedIncomeDto) {
+        return incomeRepository.findById(id).map(income -> {
             if (updatedIncomeDto.getAmount() != null) {
-                expense.setAmount(updatedIncomeDto.getAmount());
+                income.setAmount(updatedIncomeDto.getAmount());
             }
             if (updatedIncomeDto.getSource() != null) {
-                expense.setSource(updatedIncomeDto.getSource());
+                income.setSource(updatedIncomeDto.getSource());
+            }
+            if (updatedIncomeDto.getDescription() != null) {
+                income.setDescription(updatedIncomeDto.getDescription());
             }
             if (updatedIncomeDto.getDate() != null) {
                 try {
-                    expense.setDate(LocalDate.parse(updatedIncomeDto.getDate()));
+                    income.setDate(LocalDate.parse(updatedIncomeDto.getDate()));
                 } catch (DateTimeParseException e) {
-                    throw new RuntimeException("Invalid date format: " + updatedIncomeDto.getDate());
+                    throw new InvalidIncomeException("Invalid date format: " + updatedIncomeDto.getDate());
                 }
             }
-            return incomeRepository.save(expense);
-        }).orElseThrow(() -> new RuntimeException("Expense not found with id " + id));
-    }
-    public void create(Incomes user) {
-        incomeRepository.save(user);
-    }
-    public BigDecimal sumIncomesByMonth(String username, YearMonth month) {
-        List<Incomes> incomes = incomeRepository.findAllByUsername(username);
-        return incomes.stream()
-                .filter(expense -> YearMonth.from(expense.getDate()).equals(month))
-                .map(Incomes::getAmount)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+            return incomeRepository.save(income);
+        }).orElseThrow(() -> new IncomeNotFoundException("Income not found with id " + id));
     }
 
-
+    public void create(Incomes income) {
+        incomeRepository.save(income);
+    }
 }

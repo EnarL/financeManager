@@ -26,7 +26,7 @@ const actions = {
         commit('SET_LOADING', true);
         try {
             const token = rootState.user.token; // Ensure token is retrieved correctly
-            const response = await axios.get(`http://localhost:8080/expenses/findall?username=${rootState.user.username}`, {
+            const response = await axios.get(`http://localhost:8080/api/expenses/findall?username=${rootState.user.username}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -43,7 +43,7 @@ const actions = {
         const expenseWithUser = { ...newExpense, username: rootState.user.username };
         try {
             const token = rootState.user.token; // Ensure token is retrieved correctly
-            await axios.post('http://localhost:8080/expenses/add', expenseWithUser, {
+            await axios.post('http://localhost:8080/api/expenses/add', expenseWithUser, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
@@ -57,7 +57,7 @@ const actions = {
     async deleteExpense({ commit, rootState }, expenseId) {
         try {
             const token = rootState.user.token; // Ensure token is retrieved correctly
-            const response = await axios.delete(`http://localhost:8080/expenses/delete/${expenseId}`, {
+            const response = await axios.delete(`http://localhost:8080/api/expenses/delete/${expenseId}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -72,7 +72,7 @@ const actions = {
     async updateExpense({ rootState }, expense) {
         try {
             const token = rootState.user.token; // Ensure token is retrieved correctly
-            await axios.put(`http://localhost:8080/expenses/update/${expense.id}`, expense, {
+            await axios.put(`http://localhost:8080/api/expenses/update/${expense.id}`, expense, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
